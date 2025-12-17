@@ -28,11 +28,21 @@ nl -w1 -s". " "$TASK_FILE"       # nl is the number line, w1 is the width
 
 delete)
 if [ -z "$2" ]; then
-echo "task number"
-exit 1                             # exit 1 = if condition is true, the script terminates with status 1
+  echo "task number required"
+  exit 1
 fi
+
+# total number of tasks
+total_tasks=$(wc -l < "$TASK_FILE")
+
+# check if task number exists
+if [ "$2" -lt 1 ] || [ "$2" -gt "$total_tasks" ]; then
+  echo "Error: task $2 does not exist"
+  exit 1                                                    # exit 1 = if condition is true,
+fi
+
 sed -i'' "${2}d" "$TASK_FILE"
-echo "deleted task: $2"               # ${2}d  sed command for delete
+echo "deleted task: $2"
 ;;
 *)
 echo "usage: ./todo.sh add \"task description\""
